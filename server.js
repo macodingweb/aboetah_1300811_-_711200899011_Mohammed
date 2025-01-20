@@ -7,7 +7,7 @@ import express from "express";
 import multer from "multer";
 // import { v4 as uuidv4 } from "uuid";
 
-const PORT = 5002;
+const PORT = 18484;
 const app = express();
 const upload = multer();
 app.use(express.json());
@@ -19,10 +19,10 @@ app.use(
 );
 
 const conn = mysql.createPool({
-  host: "http://localhost",
-  user: "root",
-  password: "",
-  database: "manager",
+  host: "mysql-37ac4576-mohammed711adel-86e8.c.aivencloud.com",
+  user: "avnadmin",
+  password: "AVNS_YmDktDVoJwgoWtZLDqF",
+  database: "defaultdb",
 });
 
 // Register API
