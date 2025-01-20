@@ -19,7 +19,7 @@ app.use(
 );
 
 const conn = mysql.createPool({
-  host: "localhost",
+  host: "http://localhost",
   user: "root",
   password: "",
   database: "manager",
