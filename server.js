@@ -13,7 +13,7 @@ const upload = multer();
 app.use(express.json());
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "aboetah-1300811-711200899011-mohammed.vercel.app",
     credentials: true,
   })
 );
