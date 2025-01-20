@@ -1,0 +1,132 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Cairo";
+  src: url(./fonts/Cairo-ExtraLight.ttf);
+  font-weight: 100;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Cairo";
+  src: url(./fonts/Cairo-Light.ttf);
+  font-weight: 200;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Cairo";
+  src: url(./fonts/Cairo-Regular.ttf);
+  font-weight: 300;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Cairo";
+  src: url(./fonts/Cairo-Regular.ttf);
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Cairo";
+  src: url(./fonts/Cairo-SemiBold.ttf);
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Cairo";
+  src: url(./fonts/Cairo-Bold.ttf);
+  font-weight: 600;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Cairo";
+  src: url(./fonts/Cairo-Black.ttf);
+  font-weight: 700;
+  font-style: normal;
+}
+
+
+* {
+  padding: 0;
+  margin: 0;
+  outline: none;
+  border: none;
+  text-decoration: none;
+  list-style: none;
+  box-sizing: border-box;
+  font-family: "Cairo", sans-serif;
+  transition: all 0.2 ease-in-out;
+}
+
+body {
+  position: relative;
+}
+body::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-image: url("./imgs/bg.png");
+  background-position: center;
+  background-size: cover;
+  opacity: 0.5;
+}
+
+.no-search-btn::-webkit-search-cancel-button {
+  display: none;
+}
+
+.main-text-shadow {
+  text-shadow: -1px -1px 0 #007dff,
+              3px 3px 0 #007dff;
+}
+
+.main-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+@media (max-width: 1400px) {
+  .main-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+}
+
+.table-container {
+  width: 100%;      /* عرض الحاوية */
+  max-height: 400px; /* تحديد الحد الأقصى للارتفاع */
+  overflow-y: auto;  /* تفعيل التمرير العمودي */
+  max-height: calc(100vh - 60px);
+}
+.table-container::-webkit-scrollbar {
+  display: none;
+}
+
+table.main-table {
+  overflow: hidden;
+}
+table.main-table thead td,
+table.main-table tbody th {
+  padding: 15px 20px;
+  background-color: #000;
+  color: #fff;
+}
+table.main-table tbody th:nth-of-type(even) {
+  background-color: #f7f7f7;
+  color: #007dff;
+}
+table.main-table tbody th {
+  background-color: #fff;
+  color: #000;
+  border-bottom: 1px solid #000;
+}
+table.main-table tbody th a {
+  padding: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
+}
+

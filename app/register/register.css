@@ -1,0 +1,9 @@
+.main-shadow {
+    box-shadow: 8px 8px 0 #000;
+  }
+  .main-shadow-blue {
+    box-shadow: 8px 8px 0 #3b82f6;
+  }
+  .main-shadow-sm {
+    box-shadow: 4px 4px 0 #000;
+  }
