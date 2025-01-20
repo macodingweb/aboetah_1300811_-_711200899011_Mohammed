@@ -7,22 +7,22 @@ import express from "express";
 import multer from "multer";
 // import { v4 as uuidv4 } from "uuid";
 
-const PORT = 18484;
+const PORT = 5002;
 const app = express();
 const upload = multer();
 app.use(express.json());
 app.use(
   cors({
-    origin: "aboetah-1300811-711200899011-mohammed.vercel.app",
+    origin: "http://localhost:3000",
     credentials: true,
   })
 );
 
 const conn = mysql.createPool({
-  host: "mysql-37ac4576-mohammed711adel-86e8.c.aivencloud.com",
-  user: "avnadmin",
-  password: "AVNS_YmDktDVoJwgoWtZLDqF",
-  database: "defaultdb",
+  host: "localhost",
+  user: "root",
+  password: "",
+  database: "manager",
 });
 
 // Register API
