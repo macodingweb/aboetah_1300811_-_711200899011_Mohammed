@@ -137,7 +137,7 @@ app.post("/auth/new-customer", upload.none(), async (req, res) => {
       const insert_date = `${year}-${month}-${day}`;
 
       await conn.execute(
-        "INSERT INTO customers (unique_id, name, address, telephone, inserted_date, status, admin) VALUES (?, ?, ?, ?, ?, ?)",
+        "INSERT INTO customers (unique_id, name, address, telephone, inserted_date, status, admin) VALUES (?, ?, ?, ?, ?, ?, ?)",
         [randomId, name, address, tele, insert_date, status, admin]
       );
 
@@ -312,6 +312,7 @@ app.get("/api/customers-data/:userId", async (req, res) => {
       customersData.push({
         id: customers[i].id,
         name: customers[i].name,
+        address: customers[i].address,
         telephone: customers[i].telephone,
         CusInstallments: installments_valid,
         status: customers[i].status,
@@ -459,7 +460,7 @@ app.get("/api/get-customers-tele-list/:userId", async (req, res) => {
 // Edit Customer
 app.post("/api/edit-customer/:userId", upload.none(), async (req, res) => {
   const userId = parseInt(req.params.userId);
-  const { customerId, name, tele, status } = req.body;
+  const { customerId, name, address, tele, status } = req.body;
 
   try {
     const [result] = await conn.execute(
@@ -470,8 +471,8 @@ app.post("/api/edit-customer/:userId", upload.none(), async (req, res) => {
     if (result.length > 0) {
       if (tele == result[0].telephone) {
         await conn.execute(
-          "UPDATE customers SET name = ?, status = ? WHERE admin = ? AND unique_id = ?",
-          [name, status, userId, customerId]
+          "UPDATE customers SET name = ?, address = ?, status = ? WHERE admin = ? AND unique_id = ?",
+          [name, address, status, userId, customerId]
         );
 
         return res.status(409).json({
@@ -493,8 +494,8 @@ app.post("/api/edit-customer/:userId", upload.none(), async (req, res) => {
           });
         } else {
           await conn.execute(
-            "UPDATE customers SET name = ?, telephone = ?, status = ? WHERE admin = ? AND unique_id = ?",
-            [name, tele, status, userId, customerId]
+            "UPDATE customers SET name = ?, address = ?, telephone = ?, status = ? WHERE admin = ? AND unique_id = ?",
+            [name, address, tele, status, userId, customerId]
           );
 
           return res.status(409).json({
