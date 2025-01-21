@@ -85,7 +85,7 @@ function Installments() {
                             style={{
                               backgroundColor: "#007dff",
                               color: "#fff",
-                              padding: "6px 20px",
+                              padding: "2px 15px",
                             }}
                             href={`/auth/pay-installment?progressId=${item.progressId}&installmentId=${item.installment}`}
                           >
@@ -96,11 +96,22 @@ function Installments() {
                             style={{
                               backgroundColor: "#007dff",
                               color: "#fff",
-                              padding: "6px 20px",
+                              padding: "2px 15px",
                             }}
                             href={`/auth/pay-installment?progressId=${item.progressId}&installmentId=${item.installment}`}
                           >
                             واجب السداد
+                          </Link>
+                        ) : item.payNow == "pay" ? (
+                          <Link
+                            style={{
+                              backgroundColor: "#007dff",
+                              color: "#fff",
+                              padding: "2px 15px",
+                            }}
+                            href={`/auth/pay-installment?progressId=${item.progressId}&installmentId=${item.installment}`}
+                          >
+                            السداد
                           </Link>
                         ) : (
                           "غير معروف"

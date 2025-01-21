@@ -19,7 +19,7 @@ function App() {
     <>
       <div className="App p-[30px] w-full h-[100vh] bg-blue-600 flex justify-between">
         <Sidebar />
-        {/* <Dashboard /> */}
+        <Dashboard />
       </div>
     </>
   );

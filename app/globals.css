@@ -85,14 +85,8 @@ body::before {
 
 .main-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 20px;
-}
-
-@media (max-width: 1400px) {
-  .main-grid {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  }
 }
 
 .table-container {
@@ -110,15 +104,17 @@ table.main-table {
 }
 table.main-table thead td,
 table.main-table tbody th {
-  padding: 15px 20px;
+  padding: 12px 10px;
   background-color: #000;
   color: #fff;
+  font-size: 12px;
 }
 table.main-table tbody th:nth-of-type(even) {
   background-color: #f7f7f7;
   color: #007dff;
 }
 table.main-table tbody th {
+  padding: 8px 10px;
   background-color: #fff;
   color: #000;
   border-bottom: 1px solid #000;

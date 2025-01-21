@@ -108,7 +108,7 @@ app.post("/api/login", upload.none(), async (req, res) => {
 
 // Create New Customer
 app.post("/auth/new-customer", upload.none(), async (req, res) => {
-  const { admin, name, tele } = req.body;
+  const { admin, name, address, tele } = req.body;
 
   try {
     const [result] = await conn.execute(
@@ -137,12 +137,12 @@ app.post("/auth/new-customer", upload.none(), async (req, res) => {
       const insert_date = `${year}-${month}-${day}`;
 
       await conn.execute(
-        "INSERT INTO customers (unique_id, name, telephone, inserted_date, status, admin) VALUES (?, ?, ?, ?, ?, ?)",
-        [randomId, name, tele, insert_date, status, admin]
+        "INSERT INTO customers (unique_id, name, address, telephone, inserted_date, status, admin) VALUES (?, ?, ?, ?, ?, ?)",
+        [randomId, name, address, tele, insert_date, status, admin]
       );
 
       res.status(201).json({
-        message: "تمت اضافة العميل",
+        message: `تمت اضافة  ${name}`,
         style: { backgroundColor: "green", color: "white", display: "block" },
         status: "success",
         telephone: tele,
@@ -310,6 +310,7 @@ app.get("/api/customers-data/:userId", async (req, res) => {
 
       const prdoucts = installments.length;
       customersData.push({
+        id: customers[i].id,
         name: customers[i].name,
         telephone: customers[i].telephone,
         CusInstallments: installments_valid,
@@ -340,68 +341,64 @@ app.get("/api/installments-data/:userId", async (req, res) => {
       [userId]
     );
 
+
     if (installments.length > 0) {
       for (let i = 0; i < installments.length; i++) {
-        let name = "";
-        let installment_valids = 0;
-        let overdueInstallments = 0;
-        let installments_mount = 0;
-        let last_paid_date = "";
-        const [customerInstallment] = await conn.execute(
-          "SELECT * FROM installments WHERE admin = ? AND customer = ?",
-          [userId, installments[i].customer]
-        );
+          let name = "";
+          let installment_valids = 0;
+          let overdueInstallments = 0;
+          let installments_mount = 0;
+          let last_paid_date = "";
 
-        if (customerInstallment.length > 0) {
-          for (let e = 0; e < customerInstallment.length; e++) {
-            const [customerData] = await conn.execute(
-              "SELECT name FROM customers WHERE admin = ? AND unique_id = ?",
-              [userId, customerInstallment[e].customer]
-            );
+          const [customerData] = await conn.execute(
+            "SELECT name FROM customers WHERE admin = ? AND unique_id = ?",
+            [userId, installments[i].customer]
+          );
 
-            name = customerData[0].name;
+          name = customerData[0].name;
 
-            const [installmentValids] = await conn.execute(
-              "SELECT * FROM installments_progress WHERE admin = ? AND customer = ? AND installment = ?",
-              [
-                userId,
-                customerInstallment[e].customer,
-                customerInstallment[e].unique_id,
-              ]
-            );
+          const [installmentValids] = await conn.execute(
+            "SELECT * FROM installments_progress WHERE admin = ? AND customer = ? AND installment = ?",
+            [
+              userId,
+              installments[i].customer,
+              installments[i].unique_id,
+            ]
+          );
 
-            for (let j = 0; j < installmentValids.length; j++) {
-              if (installmentValids[j].status == false) {
-                installments_mount += 1;
-              }
-              const today = new Date();
+          installment_valids = installmentValids.length;
 
-              const installmentDate = new Date(installmentValids[j].date);
-              if (
-                installmentDate < today &&
-                installmentValids[j].status != true
-              ) {
-                overdueInstallments += 1;
-              }
+          for (let j = 0; j < installmentValids.length; j++) {
+            if (installmentValids[j].status == false) {
+              installments_mount += 1;
             }
+            const today = new Date();
 
-            const [lastPaidDate] = await conn.execute(
-              "SELECT * FROM installments_progress WHERE admin = ? AND customer = ? AND installment = ? AND status = 1 ORDER BY date DESC LIMIT 1",
-              [
-                userId,
-                customerInstallment[e].customer,
-                customerInstallment[e].unique_id,
-              ]
-            );
-
-            if (lastPaidDate.length > 0) {
-              last_paid_date = new Date(
-                lastPaidDate[0].finished_date
-              ).toLocaleDateString("en-CA"); // YYYY-MM-DD
+            const installmentDate = new Date(installmentValids[j].date);
+            if (
+              installmentDate < today &&
+              installmentValids[j].status != true
+            ) {
+              overdueInstallments += 1;
             }
-
-            installment_valids += installmentValids.length;
           }
+
+          const [lastPaidDate] = await conn.execute(
+            "SELECT * FROM installments_progress WHERE admin = ? AND customer = ? AND installment = ? AND status = 1 ORDER BY date DESC LIMIT 1",
+            [
+              userId,
+              installments[i].customer,
+              installments[i].unique_id,
+            ]
+          );
+
+          if (lastPaidDate.length > 0) {
+            last_paid_date = new Date(
+              lastPaidDate[0].finished_date
+            ).toLocaleDateString("en-CA"); // YYYY-MM-DD
+          }
+          
+
           installmentsData.push({
             id: installments[i].unique_id,
             name: name,
@@ -418,7 +415,6 @@ app.get("/api/installments-data/:userId", async (req, res) => {
             overdue_installments: overdueInstallments,
             remained_installments: installments_mount,
           });
-        }
       }
       return res.status(201).json(installmentsData);
     } else {
@@ -549,9 +545,9 @@ app.get("/api/installments-details/:userId/:installmentId", async (req, res) => 
           timePaid.setHours(0, 0, 0, 0);
           today.setHours(0, 0, 0, 0);
 
-          if (timePaid > today) {
-            payBtn = "wait";
-          } else if (timePaid <= today && result[i].status == true) {
+          if (timePaid > today && result[i].status == false) {
+            payBtn = "pay";
+          } else if ((timePaid <= today && result[i].status == true) || (timePaid > today && result[i].status == true)) {
             payBtn = "paid";
           } else if (
             timePaid.getTime() === today.getTime() &&
