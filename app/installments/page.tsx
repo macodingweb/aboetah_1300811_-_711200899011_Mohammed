@@ -44,26 +44,37 @@ function Installments() {
     }
   }, [admin]); // تنفيذ `handleData` عند تغير `admin`
 
+  const handlingSearch = async (e: React.FormEvent<HTMLInputElement>) => {
+    try {
+      const response = await fetch(`http://localhost:5002/api/search-installments/${admin}`, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ searchQuery: (e.target as HTMLInputElement).value }),
+      })
+
+      const data = await response.json();
+      setInstallments(data);
+      console.log(data);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   return (
     <>
       <div className="App p-[30px] w-full h-[100vh] bg-blue-600 flex justify-between">
         <Sidebar />
         <div className="content relative w-[100%] mr-[30px]">
-          <form action={"#"} className="search-box relative w-[75%] mb-[30px]">
-            <button
-              type="submit"
-              className="w-[20px] absolute left-[15px] top-2/4 -translate-y-2/4"
-            >
+          <div className="search-box relative w-[50%] mb-[30px]">
+            <span className="w-[14px] absolute left-[15px] top-2/4 -translate-y-2/4">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
+                <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/>
               </svg>
-            </button>
-            <input
-              type="seach"
-              className="no-search-btn w-full p-4 tex-[16px] border-solid border-[2px] border-black main-shadow-lg rounded-[6px]"
-              placeholder="بحث عملاء..."
-            />
-          </form>
+            </span>
+            <input onInput={(e) => handlingSearch(e)} type="search" className="no-search-btn w-full p-4 text-[12px] border-solid border-[2px] border-black main-shadow-lg rounded-[6px]" placeholder="بحث عملاء..." />
+          </div>
           <div className="table-container">
             <table className="main-table rounded-[10px] overflow-hidden border-collapse border-spacing-0 text-center bg-white w-full">
               <thead>

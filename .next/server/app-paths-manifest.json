@@ -1,0 +1,7 @@
+{
+  "/customers/page": "app/customers/page.js",
+  "/page": "app/page.js",
+  "/installments/page": "app/installments/page.js",
+  "/auth/new-installment/page": "app/auth/new-installment/page.js",
+  "/auth/installment-details/page": "app/auth/installment-details/page.js"
+}

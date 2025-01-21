@@ -54,22 +54,22 @@ function Sidebar() {
 
   return (
     <>
-      <div className="sidebar relative w-[350px] p-5 bg-white rounded-xl main-shadow border-solid border-[2px] border-black">
+      <div className="sidebar relative w-[300px] p-5 bg-white rounded-xl main-shadow border-solid border-[2px] border-black">
         <div className="logo-container flex items-center justify-between">
-          <span className="title text-[22px] font-semibold text-slate-800">
+          <span className="title text-[14px] font-semibold text-slate-800">
             ادارة الأقساط
           </span>
-          <span className="w-[60px] h-[60px] flex items-center justify-center bg-blue-600 rounded-[6px] text-[30px] text-white font-bold">
+          <span className="w-[40px] h-[40px] flex items-center justify-center bg-blue-600 rounded-[6px] text-[20px] text-white font-bold">
             SI
           </span>
         </div>
         <form action="#" className="search-form relative w-full my-6">
           <input
             type="search"
-            className="form-input w-full main-shadow-md rounded-[4px] no-search-btn p-3 px-4 bg-white border-solid border-[2px] transition-all border-black main-shadow-focus"
+            className="form-input text-[14px] w-full main-shadow-md rounded-[4px] no-search-btn p-3 px-4 bg-white border-solid border-[2px] transition-all border-black main-shadow-focus"
             placeholder="بحث..."
           />
-          <div className="icon w-[18px] absolute top-2/4 -translate-y-2/4 left-[12px]">
+          <div className="icon w-[12px] absolute top-2/4 -translate-y-2/4 left-[12px]">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
               <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
             </svg>
@@ -78,9 +78,9 @@ function Sidebar() {
         <ul className="main-list">
           {List.map((item, index) => (
             <li className="list-item" key={item.id || index}>
-              <Link href={item.link} className="item-link font-semibold text-[14px] flex justify-between items-center py-3 px-5 transition-all main-shadow-hover mb-5 border-solid border-[2px] border-black rounded-[6px] main-shadow-md">
+              <Link href={item.link} className="item-link font-semibold text-[12px] flex justify-between items-center py-3 px-5 transition-all main-shadow-hover mb-3 border-solid border-[2px] border-black rounded-[6px] main-shadow-md">
                 <span className="text">{item.text}</span>
-                <div className="icon w-[20px]">
+                <div className="icon w-[16px]">
                   {item.img}
                 </div>
               </Link>
