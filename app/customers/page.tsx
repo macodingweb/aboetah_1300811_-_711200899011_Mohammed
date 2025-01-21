@@ -9,6 +9,7 @@ function Customer() {
   const [customers, setCustomers] = useState([{
     id: 0,
     name: '',
+    address: '',
     telephone: '',
     CusInstallments: 0,
     status: '',
@@ -81,6 +82,7 @@ function Customer() {
                 <tr>
                   <td>تسلسل</td>
                   <td>الاسم</td>
+                  <td>العنوان</td>
                   <td>رقم الهاتف</td>
                   <td>الاقساط</td>
                   <td>عميل</td>
@@ -97,6 +99,7 @@ function Customer() {
                     <tr key={index}>
                       <th>{customer.id}</th>
                       <th>{customer.name}</th>
+                      <th>{customer.address}</th>
                       <th>{customer.telephone}</th>
                       <th>{customer.CusInstallments} أقساط</th>
                       <th>{customer.status}</th>

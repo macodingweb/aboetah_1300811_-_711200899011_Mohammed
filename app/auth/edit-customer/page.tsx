@@ -82,6 +82,10 @@ function NewCustomer() {
             <input type="text" defaultValue={`${nameInp}`} name="name" id="name" className="w-full main-shadow-md mb-4  transition-all focus:translate-x-1 focus:translate-y-1 focus:scale-95 focus:main-shadow py-4 px-3 border-solid border-[2px] border-black text-black rounded-md" placeholder="ادخل اسم العميل" required />
           </div>
           <div className="form-group grid">
+            <label htmlFor="address" className="form-label mb-2">عنوان العميل</label>
+            <input type="text" name="address" id="address" className="w-full main-shadow-md mb-4  transition-all focus:translate-x-1 focus:translate-y-1 focus:scale-95 focus:main-shadow py-4 px-3 border-solid border-[2px] border-black text-black rounded-md" placeholder="ادخل عنوان العميل" required />
+          </div>
+          <div className="form-group grid">
             <label htmlFor="telephone" className="form-label mb-2">رقم الهاتف</label>
             <input type="text" defaultValue={`${telephoneInp}`} pattern="^(010|011|012|015)\d{8}$" title="الرجاء إدخال رقم هاتف مصري صحيح (يبدأ بــ 010 أو 011 أو 012 أو 015 ويتكون من 11 رقم)" name="tele" id="telephone" className="w-full main-shadow-md mb-4  transition-all focus:translate-x-1 focus:translate-y-1 focus:scale-95 focus:main-shadow py-4 px-3 border-solid border-[2px] border-black text-black rounded-md" placeholder="ادخل اسم العميل" required />
           </div>
