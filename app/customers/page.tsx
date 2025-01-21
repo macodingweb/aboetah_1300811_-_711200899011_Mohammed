@@ -43,14 +43,14 @@ function Customer() {
     }
   }, [admin]); // تنفيذ `handleData` عند تغير `admin`
 
-  const SearchHandling = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const SearchHandling = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     try {
       const response = await fetch(`http://localhost:5002/api/search-customers/${admin}`, {
         method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ searchQuery:  e.target.value}),
+        body: JSON.stringify({ searchQuery:  (e.target as HTMLInputElement).value}),
       });
 
       const data = await response.json();

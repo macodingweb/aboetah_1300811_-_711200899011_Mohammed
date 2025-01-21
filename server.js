@@ -668,6 +668,181 @@ app.get("/api/dashboard-data/:userId", async (req, res) => {
   }
 });
 
+// Get Customers By Search
+app.post("/api/search-customers/:userId", upload.none(), async (req, res) => {
+  const {searchQuery} = req.body;
+
+  try {
+    const customersData = [];
+    const userId = parseInt(req.params.userId);
+    console.log(userId);
+
+    const [customers] = await conn.execute(
+      "SELECT * FROM customers WHERE admin = ? AND name LIKE ?",
+      [userId, `${searchQuery}%`]
+    );
+
+    for (let i = 0; i < customers.length; i++) {
+      let installments_valid = 0;
+      let installments_mount = 0;
+      let overdueInstallments = 0;
+
+      const [installments] = await conn.execute(
+        "SELECT * FROM installments WHERE admin = ? AND customer = ?",
+        [userId, customers[i].unique_id]
+      );
+
+      for (let j = 0; j < installments.length; j++) {
+        const [installments_progress] = await conn.execute(
+          "SELECT * FROM installments_progress WHERE admin = ? AND customer = ? AND installment = ?",
+          [userId, customers[i].unique_id, installments[j].unique_id]
+        );
+
+        for (let e = 0; e < installments_progress.length; e++) {
+          if (installments_progress[e].status == false) {
+            installments_mount += 1;
+          }
+
+          const today = new Date();
+
+          const installmentDate = new Date(installments_progress[e].date);
+          if (
+            installmentDate < today &&
+            installments_progress[e].status != true
+          ) {
+            overdueInstallments += 1;
+          }
+        }
+
+        installments_valid += installments_progress.length;
+      }
+
+      const prdoucts = installments.length;
+      customersData.push({
+        id: customers[i].id,
+        name: customers[i].name,
+        telephone: customers[i].telephone,
+        CusInstallments: installments_valid,
+        status: customers[i].status,
+        insert_date: customers[i].inserted_date.toISOString().split("T")[0],
+        prdoucts: prdoucts,
+        unique_id: customers[i].unique_id,
+        bad_installments: overdueInstallments,
+        remained_installments: installments_mount,
+      });
+    }
+
+    return res.status(201).json(customersData);
+  } catch (err) {
+    console.log(err);
+  }
+
+});
+
+// Get Installments By Search
+app.post("/api/search-installments/:userId", upload.none(), async (req, res) => {
+  const {searchQuery} = req.body;
+  
+  try {
+    const installmentsData = [];
+    const userId = parseInt(req.params.userId);
+    console.log(userId);
+
+    const [customers] = await conn.execute(
+      'SELECT * FROM customers WHERE admin = ? AND name LIKE ?',
+      [userId, `${searchQuery}%`],
+    )
+
+    if (customers.length > 0) {
+      for (let q = 0; q < customers.length; q++) {
+        const [installments] = await conn.execute(
+          "SELECT * FROM installments WHERE admin = ? AND customer = ?",
+          [userId, customers[q].unique_id],
+        );
+    
+        for (let i = 0; i < installments.length; i++) {
+          let name = "";
+          let installment_valids = 0;
+          let overdueInstallments = 0;
+          let installments_mount = 0;
+          let last_paid_date = "";
+  
+            const [customerData] = await conn.execute(
+              "SELECT name FROM customers WHERE admin = ? AND unique_id = ?",
+              [userId, installments[i].customer]
+            );
+  
+            name = customerData[0].name;
+  
+            const [installmentValids] = await conn.execute(
+              "SELECT * FROM installments_progress WHERE admin = ? AND customer = ? AND installment = ?",
+              [
+                userId,
+                installments[i].customer,
+                installments[i].unique_id,
+              ]
+            );
+  
+            installment_valids = installmentValids.length;
+  
+            for (let j = 0; j < installmentValids.length; j++) {
+              if (installmentValids[j].status == false) {
+                installments_mount += 1;
+              }
+              const today = new Date();
+  
+              const installmentDate = new Date(installmentValids[j].date);
+              if (
+                installmentDate < today &&
+                installmentValids[j].status != true
+              ) {
+                overdueInstallments += 1;
+              }
+            }
+  
+            const [lastPaidDate] = await conn.execute(
+              "SELECT * FROM installments_progress WHERE admin = ? AND customer = ? AND installment = ? AND status = 1 ORDER BY date DESC LIMIT 1",
+              [
+                userId,
+                installments[i].customer,
+                installments[i].unique_id,
+              ]
+            );
+  
+            if (lastPaidDate.length > 0) {
+              last_paid_date = new Date(
+                lastPaidDate[0].finished_date
+              ).toLocaleDateString("en-CA"); // YYYY-MM-DD
+            }
+            
+  
+          installmentsData.push({
+            id: installments[i].unique_id,
+            name: name,
+            prodcut: installments[i]["product"],
+            insert_date: installments[i].inserted_date
+              .toLocaleDateString("en-CA")
+              .split("T")[0],
+            last_paid_date: last_paid_date == "" ? "لا يوجد" : last_paid_date,
+            installment_valids: installment_valids,
+            price: installments[i].selling_price,
+            total:
+              installments[i].installment_value * installments[i]["progress"] +
+              installments[i].down_paid,
+            overdue_installments: overdueInstallments,
+            remained_installments: installments_mount,
+          });
+        }
+      }
+    } 
+
+    console.log(installmentsData);
+    return res.status(201).json(installmentsData);
+
+  } catch (err) {
+    console.log(err);
+  }
+})
 
 // 🚀 تشغيل السيرفر
 app.listen(PORT, () => {
