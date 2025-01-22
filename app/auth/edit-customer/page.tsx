@@ -80,16 +80,20 @@ function NewCustomer() {
           </div>
         )}
         <form onSubmit={handleSubmit} className="login-form main-shadow w-[400px] p-5 bg-white rounded-xl z-30">
-          <input type="number" hidden name="customerId" value={customerInp} />
+          <input type="number" hidden name="customerId" value={customerInp? customerInp : ''} />
           <div className="form-title text-center text-[24px] font-semibold">إدارة الأقساط</div>
-          <input type="number" name="admin" hidden value={`${sessionID}`} />
+          <input type="number" name="admin" hidden value={sessionID ? sessionID : ''} />
           <div className="form-group grid">
             <label htmlFor="name" className="form-label mb-2">اسم العميل</label>
-            <input type="text" defaultValue={`${nameInp}`} name="name" id="name" className="w-full main-shadow-md mb-4  transition-all focus:translate-x-1 focus:translate-y-1 focus:scale-95 focus:main-shadow py-4 px-3 border-solid border-[2px] border-black text-black rounded-md" placeholder="ادخل اسم العميل" required />
+            <input type="text" defaultValue={nameInp ? nameInp : ''} name="name" id="name" className="w-full main-shadow-md mb-4  transition-all focus:translate-x-1 focus:translate-y-1 focus:scale-95 focus:main-shadow py-4 px-3 border-solid border-[2px] border-black text-black rounded-md" placeholder="ادخل اسم العميل" required />
+          </div>
+          <div className="form-group grid">
+            <label htmlFor="address" className="form-label mb-2">عنوان العميل</label>
+            <input type="text" defaultValue={AddressInp ? AddressInp : ''} name="address" id="address" className="w-full main-shadow-md mb-4  transition-all focus:translate-x-1 focus:translate-y-1 focus:scale-95 focus:main-shadow py-4 px-3 border-solid border-[2px] border-black text-black rounded-md" placeholder="ادخل عنوان العميل" required />
           </div>
           <div className="form-group grid">
             <label htmlFor="telephone" className="form-label mb-2">رقم الهاتف</label>
-            <input type="text" defaultValue={`${telephoneInp}`} pattern="^(010|011|012|015)\d{8}$" title="الرجاء إدخال رقم هاتف مصري صحيح (يبدأ بــ 010 أو 011 أو 012 أو 015 ويتكون من 11 رقم)" name="tele" id="telephone" className="w-full main-shadow-md mb-4  transition-all focus:translate-x-1 focus:translate-y-1 focus:scale-95 focus:main-shadow py-4 px-3 border-solid border-[2px] border-black text-black rounded-md" placeholder="ادخل اسم العميل" required />
+            <input type="text" defaultValue={telephoneInp ? telephoneInp : ''} pattern="^(010|011|012|015)\d{8}$" title="الرجاء إدخال رقم هاتف مصري صحيح (يبدأ بــ 010 أو 011 أو 012 أو 015 ويتكون من 11 رقم)" name="tele" id="telephone" className="w-full main-shadow-md mb-4  transition-all focus:translate-x-1 focus:translate-y-1 focus:scale-95 focus:main-shadow py-4 px-3 border-solid border-[2px] border-black text-black rounded-md" placeholder="ادخل اسم العميل" required />
           </div>
           <div className="form-group grid">
             <label htmlFor="status" className="form-label mb-2">حالة العميل</label>
