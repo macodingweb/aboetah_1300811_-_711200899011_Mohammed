@@ -80,9 +80,9 @@ function NewCustomer() {
           </div>
         )}
         <form onSubmit={handleSubmit} className="login-form main-shadow w-[400px] p-5 bg-white rounded-xl z-30">
-          <input type="number" hidden name="customerId" value={customerInp? customerInp : ''} />
+          <input type="number" hidden name="customerId" defaultValue={customerInp? customerInp : ''} />
           <div className="form-title text-center text-[24px] font-semibold">إدارة الأقساط</div>
-          <input type="number" name="admin" hidden value={sessionID ? sessionID : ''} />
+          <input type="number" name="admin" hidden defaultValue={sessionID ? sessionID : ''} />
           <div className="form-group grid">
             <label htmlFor="name" className="form-label mb-2">اسم العميل</label>
             <input type="text" defaultValue={nameInp ? nameInp : ''} name="name" id="name" className="w-full main-shadow-md mb-4  transition-all focus:translate-x-1 focus:translate-y-1 focus:scale-95 focus:main-shadow py-4 px-3 border-solid border-[2px] border-black text-black rounded-md" placeholder="ادخل اسم العميل" required />
@@ -97,26 +97,10 @@ function NewCustomer() {
           </div>
           <div className="form-group grid">
             <label htmlFor="status" className="form-label mb-2">حالة العميل</label>
-            <select className="w-full main-shadow-md mb-4  transition-all focus:translate-x-1 focus:translate-y-1 focus:scale-95 focus:main-shadow py-4 px-3 border-solid border-[2px] border-black text-black rounded-md" name="status" id="status">
-              {StatusInp == 'جديد' ? (
-              <>
-              <option value="جديد" selected>جديد</option>
-              <option value="ممتاز" >ممتاز</option>
-              <option value="سئ" >سئ</option>
-              </>
-              ) : StatusInp == 'ممتاز' ? (
-                <>
-              <option value="جديد">جديد</option>
-              <option value="ممتاز" selected >ممتاز</option>
-              <option value="سئ" >سئ</option>
-                </>
-              ) : StatusInp == 'سئ' ? (
-                <>
+            <select value={StatusInp == 'جديد' ? 'جديد' : StatusInp == 'ممتاز' ? 'ممتاز' : StatusInp == 'سئ' ? 'سئ' : 'غير معروف'} onChange={(e) => setStatusInp(e.target.value)} className="w-full main-shadow-md mb-4  transition-all focus:translate-x-1 focus:translate-y-1 focus:scale-95 focus:main-shadow py-4 px-3 border-solid border-[2px] border-black text-black rounded-md" name="status" id="status">
               <option value="جديد">جديد</option>
               <option value="ممتاز" >ممتاز</option>
-              <option value="سئ" selected >سئ</option>
-                </>
-              ) : 'لا يوجد بيانات'}
+              <option value="سئ" >سئ</option>
             </select>
           </div>
           <div className="form-submit flex justify-between items-center">

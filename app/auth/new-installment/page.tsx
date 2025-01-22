@@ -148,7 +148,7 @@ function NewInstallment() {
         )}
         <form onSubmit={NewCustomerSubmit} className={`absolute z-50 ${newCustomerForm ? 'block opacity-100' : 'hidden opacity-0'} border-solid border-2 border-black shadow login-form main-shadow w-[400px] p-5 bg-white rounded-xl z-30`}>
           <div className="form-title text-center text-[24px] font-semibold">إدارة الأقساط</div>
-          <input type="number" name="admin" hidden value={`${admin}`} />
+          <input type="number" name="admin" hidden value={`${admin}`} onChange={() => setAdmin(admin)} />
           <div className="form-group grid">
             <label htmlFor="name" className="form-label mb-2">اسم العميل</label>
             <input type="text" name="name" id="name" className="w-full main-shadow-md mb-4  transition-all focus:translate-x-1 focus:translate-y-1 focus:scale-95 focus:main-shadow py-4 px-3 border-solid border-[2px] border-black text-black rounded-md" placeholder="ادخل اسم العميل" required />
@@ -175,7 +175,7 @@ function NewInstallment() {
             </svg>
           </button>
           <div className="form-title text-center text-[18px] font-semibold mb-5">اضافة قسط</div>
-          <input type="number" hidden name="admin" value={`${admin}`} required />
+          <input type="number" hidden name="admin" value={`${admin}`} onChange={() => setAdmin(admin)} required />
           <div className="form-group flex gap-[15px]">
             <div className="only-group w-[200px]">
               <label htmlFor="customer" className="form-label mb-3 block">العميل</label>
