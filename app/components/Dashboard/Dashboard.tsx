@@ -9,6 +9,7 @@ function Dashboard() {
     bad_CustomersCount: 0,
     overdue_Installments: 0,
     must_Now: 0,
+    totalEarnings: 0,
   }]);
   const [cardA, setCardA] = useState(false);
 
@@ -121,7 +122,9 @@ function Dashboard() {
               </div>
             </div>
             <div style={cardA ? {filter: "blur(0)"} : {filter: "blur(12px)"}} className="value select-none text-center text-[18px] font-bold text-slate-800 my-8 blur-[10px]">
-              0
+              {dashboardData.length > 0
+                ? Math.floor(dashboardData[0].totalEarnings)
+                : "لا توجد بيانات"}
             </div>
           </div>
         </div>

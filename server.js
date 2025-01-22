@@ -415,6 +415,7 @@ app.get("/api/installments-data/:userId", async (req, res) => {
               installments[i].down_paid,
             overdue_installments: overdueInstallments,
             remained_installments: installments_mount,
+            down_paid: installments[i].down_paid,
           });
       }
       return res.status(201).json(installmentsData);
@@ -621,6 +622,7 @@ app.get("/api/dashboard-data/:userId", async (req, res) => {
     let specialCustomersCount = 0;
     let badCustomersCount = 0;
     let overdueInstallments = 0;
+    let totalEarnings = 0;
     let mustNow = 0;
 
     // تنفيذ جميع الاستعلامات في نفس الوقت
@@ -633,7 +635,6 @@ app.get("/api/dashboard-data/:userId", async (req, res) => {
 
     console.log(badCustomersCountS[0]);
     console.log(userId);
-    
 
     customersCount = customersCountS[0].length;
     specialCustomersCount = specialCustomersCountS[0].length;
@@ -651,6 +652,26 @@ app.get("/api/dashboard-data/:userId", async (req, res) => {
       }
     });
 
+    const [cashValue] = await conn.execute(
+      'SELECT * FROM installments WHERE admin = ?',
+      [userId]
+    )
+
+    for (let i = 0; i < cashValue.length; i++) {
+      const earn1 = (cashValue[i].installment_value * cashValue[i].progress) - (cashValue[i].selling_price - cashValue[i].down_paid);
+      const installmentEarns = earn1 / cashValue[i].progress;
+
+      const [progressChecking] = await conn.execute(
+        'SELECT * FROM installments_progress WHERE admin = ? AND installment = ? AND customer = ? AND status = 1',
+        [userId, cashValue[i].unique_id, cashValue[i].customer]
+      );
+
+      for (let e = 0; e < progressChecking.length; e++) {
+        totalEarnings += installmentEarns;
+      }
+
+    }
+
     // تجميع البيانات في مصفوفة
     dashboardData.push({
       customers_Count: customersCount,
@@ -658,6 +679,7 @@ app.get("/api/dashboard-data/:userId", async (req, res) => {
       bad_CustomersCount: badCustomersCount,
       overdue_Installments: overdueInstallments,
       must_Now: mustNow,
+      totalEarnings: totalEarnings,
     });
     console.log(dashboardData);
     

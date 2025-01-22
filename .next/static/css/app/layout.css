@@ -938,9 +938,8 @@ body::before {
 
 .table-container {
   width: 100%;      /* عرض الحاوية */
-  max-height: 400px; /* تحديد الحد الأقصى للارتفاع */
   overflow-y: auto;  /* تفعيل التمرير العمودي */
-  max-height: calc(100vh - 60px);
+  max-height: calc(100vh - 160px);
 }
 .table-container::-webkit-scrollbar {
   display: none;

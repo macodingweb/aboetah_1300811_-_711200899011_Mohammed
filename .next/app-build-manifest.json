@@ -6,10 +6,11 @@
       "static/css/app/layout.css",
       "static/chunks/app/layout.js"
     ],
-    "/page": [
+    "/register/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/page.js"
+      "static/css/app/register/page.css",
+      "static/chunks/app/register/page.js"
     ],
     "/login/page": [
       "static/chunks/webpack.js",
@@ -17,16 +18,16 @@
       "static/css/app/login/page.css",
       "static/chunks/app/login/page.js"
     ],
-    "/customers/page": [
+    "/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/css/app/customers/page.css",
-      "static/chunks/app/customers/page.js"
+      "static/chunks/app/page.js"
     ],
-    "/auth/edit-customer/page": [
+    "/auth/new-installment/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/auth/edit-customer/page.js"
+      "static/css/app/auth/new-installment/page.css",
+      "static/chunks/app/auth/new-installment/page.js"
     ],
     "/installments/page": [
 <<<<<<< HEAD
@@ -42,17 +43,21 @@
       "static/css/app/auth/installment-details/page.css",
       "static/chunks/app/auth/installment-details/page.js"
     ],
-    "/auth/new-installment/page": [
+    "/customers/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/css/app/auth/new-installment/page.css",
-      "static/chunks/app/auth/new-installment/page.js"
+      "static/css/app/customers/page.css",
+      "static/chunks/app/customers/page.js"
     ],
+<<<<<<< HEAD
     "/auth/pay-installment/page": [
+>>>>>>> version1.0.1
+=======
+    "/auth/edit-customer/page": [
 >>>>>>> version1.0.1
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/auth/pay-installment/page.js"
+      "static/chunks/app/auth/edit-customer/page.js"
     ]
   }
 }
