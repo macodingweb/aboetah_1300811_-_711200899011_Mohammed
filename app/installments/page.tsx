@@ -17,6 +17,7 @@ function Installments() {
     total: 0,
     overdue_installments: 0,
     remained_installments: 0,
+    down_paid: 0,
   }]);
 
   useEffect(() => {
@@ -73,7 +74,7 @@ function Installments() {
                 <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/>
               </svg>
             </span>
-            <input onInput={(e) => handlingSearch(e)} type="search" className="no-search-btn w-full p-4 text-[12px] border-solid border-[2px] border-black main-shadow-lg rounded-[6px]" placeholder="بحث عملاء..." />
+            <input onInput={(e) => handlingSearch(e)} type="search" className="no-search-btn w-full p-4 text-[12px] border-solid border-[2px] border-black main-shadow-lg rounded-[6px]" placeholder="بحث أقساط..." />
           </div>
           <div className="table-container">
             <table className="main-table rounded-[10px] overflow-hidden border-collapse border-spacing-0 text-center bg-white w-full">
@@ -85,6 +86,7 @@ function Installments() {
                   <td>تاريخ اخر دفعه</td>
                   <td>عدد الاقساط</td>
                   <td>الكاش</td>
+                  <td>المقدم</td>
                   <td>الاجمالي</td>
                   <td>متأخر</td>
                   <td>الباقي</td>
@@ -101,6 +103,7 @@ function Installments() {
                   <th>{item.last_paid_date}</th>
                   <th>{item.installment_valids} أقساط</th>
                   <th>{item.price}</th>
+                  <th>{item.down_paid}</th>
                   <th>{item.total}</th>
                   <th>{item.overdue_installments} أقساط</th>
                   <th>{item.remained_installments} أقساط</th>
