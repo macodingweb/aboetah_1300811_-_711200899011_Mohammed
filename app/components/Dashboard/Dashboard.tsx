@@ -8,7 +8,6 @@ function Dashboard() {
     special_CustomersCount: 0,
     bad_CustomersCount: 0,
     overdue_Installments: 0,
-    must_Now: 0,
     totalEarnings: 0,
   }]);
   const [cardA, setCardA] = useState(false);
@@ -140,6 +139,10 @@ function Dashboard() {
               </svg>
             </div>
           </Link>
+        </div>
+
+        <div className="quick-links absolute bottom-4 flex items-center gap-8">
+          <Link href={"/installments?overdue_filter=true"} className="text-red-500 main-text-warning text-[18px] font-bold">{dashboardData[0].overdue_Installments} أقساط متأخره</Link>
         </div>
       </div>
     </>

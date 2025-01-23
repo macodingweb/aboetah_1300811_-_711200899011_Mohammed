@@ -79,8 +79,8 @@ body::before {
 }
 
 .main-text-shadow {
-  text-shadow: -1px -1px 0 #007dff,
-              3px 3px 0 #007dff;
+  text-shadow: -1px -1px 0 ,
+              3px 3px 0 #475569;
 }
 
 .main-grid {
@@ -125,3 +125,7 @@ table.main-table tbody th a {
   transition: 0.2s ease-in-out;
 }
 
+.main-text-warning {
+  text-shadow: -2px -2px 0 #fff,
+              1px 1px 0 #fff;
+}

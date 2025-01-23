@@ -51,7 +51,7 @@ function Installments() {
 
   return (
     <>
-      <div className="App p-[30px] w-full h-[100vh] bg-blue-600 flex justify-between">
+      <div className="App p-[30px] w-full h-[100vh] bg-slate-600 flex justify-between">
         <Sidebar />
         <div className="content relative w-[100%] mr-[30px]">
           <div className="table-container">

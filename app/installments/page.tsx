@@ -6,6 +6,7 @@ import Link from "next/link";
 
 function Installments() {
   const [admin, setAdmin] = useState(0);
+  const [filter, setFilter] = useState(false);
   const [installments, setInstallments] = useState([{
     id: 0,
     name: '',
@@ -26,12 +27,20 @@ function Installments() {
     } else {
       setAdmin(Number(sessionStorage.getItem("userAuth")));
     }
+
+    const urlParams = new URLSearchParams(window.location.search);
+
+    if (urlParams.get("overdue_filter")) {
+      setFilter(Boolean(urlParams.get("overdue_filter")));
+    } else {
+      setFilter(Boolean(false));
+    }
   }, []);
 
   useEffect(() => {
     const handleData = async () => {
       try {
-        const response = await fetch(`http://localhost:5002/api/installments-data/${admin}`);
+        const response = await fetch(`http://localhost:5002/api/installments-data/${admin}/${filter}`);
         const data = await response.json();
         console.log(data);
         setInstallments(data); // تخزين البيانات كمصفوفة
@@ -65,7 +74,7 @@ function Installments() {
 
   return (
     <>
-      <div className="App p-[30px] w-full h-[100vh] bg-blue-600 flex justify-between">
+      <div className="App p-[30px] w-full h-[100vh] bg-slate-600 flex justify-between">
         <Sidebar />
         <div className="content relative w-[100%] mr-[30px]">
           <div className="search-box relative w-[50%] mb-[30px]">

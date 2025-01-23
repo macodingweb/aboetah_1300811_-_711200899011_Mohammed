@@ -51,7 +51,7 @@ function NewCustomer() {
 
   return (
     <>
-      <div className="min-h-[100vh] flex justify-center items-center bg-blue-600">
+      <div className="min-h-[100vh] flex justify-center items-center bg-slate-600">
         <form onSubmit={handleSubmit} className="login-form main-shadow w-[400px] p-5 bg-white rounded-xl z-30">
           <h3 className="mb-2 font-semibold">هل تريد تأكيد سداد القسط ؟</h3>
           <div className="form-submit flex justify-between items-center">

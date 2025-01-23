@@ -331,7 +331,7 @@ app.get("/api/customers-data/:userId", async (req, res) => {
 });
 
 // Get Installments Data
-app.get("/api/installments-data/:userId", async (req, res) => {
+app.get("/api/installments-data/:userId/", async (req, res) => {
   try {
     const installmentsData = [];
     const userId = parseInt(req.params.userId);
