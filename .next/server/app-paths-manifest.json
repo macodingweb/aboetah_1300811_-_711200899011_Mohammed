@@ -1,29 +1,5 @@
 {
-<<<<<<< HEAD
-<<<<<<< HEAD
   "/favicon.ico/route": "app/favicon.ico/route.js",
   "/login/page": "app/login/page.js",
-  "/page": "app/page.js",
-  "/customers/page": "app/customers/page.js",
-  "/auth/edit-customer/page": "app/auth/edit-customer/page.js",
-  "/installments/page": "app/installments/page.js"
-=======
-  "/customers/page": "app/customers/page.js",
-  "/login/page": "app/login/page.js",
-  "/auth/new-installment/page": "app/auth/new-installment/page.js",
-  "/auth/edit-customer/page": "app/auth/edit-customer/page.js",
-  "/installments/page": "app/installments/page.js",
-=======
->>>>>>> version1.0.1
-  "/page": "app/page.js",
-  "/auth/new-installment/page": "app/auth/new-installment/page.js",
-  "/installments/page": "app/installments/page.js",
-  "/auth/installment-details/page": "app/auth/installment-details/page.js",
-<<<<<<< HEAD
-  "/auth/pay-installment/page": "app/auth/pay-installment/page.js"
->>>>>>> version1.0.1
-=======
-  "/customers/page": "app/customers/page.js",
-  "/auth/edit-customer/page": "app/auth/edit-customer/page.js"
->>>>>>> version1.0.1
+  "/register/page": "app/register/page.js"
 }
