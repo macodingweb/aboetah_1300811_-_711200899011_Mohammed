@@ -331,99 +331,98 @@ app.get("/api/customers-data/:userId", async (req, res) => {
 });
 
 // Get Installments Data
-app.get("/api/installments-data/:userId/", async (req, res) => {
+app.get("/api/installments-data/:userId/:filter?", async (req, res) => {
   try {
     const installmentsData = [];
     const userId = parseInt(req.params.userId);
-    console.log(userId);
+    const filter = req.params.filter ? req.params.filter === "true" : null; // تحويل filter إلى Boolean
 
+    // جلب جميع الأقساط لهذا الـ admin
     const [installments] = await conn.execute(
       "SELECT * FROM installments WHERE admin = ?",
       [userId]
     );
 
-
-    if (installments.length > 0) {
-      for (let i = 0; i < installments.length; i++) {
-          let name = "";
-          let installment_valids = 0;
-          let overdueInstallments = 0;
-          let installments_mount = 0;
-          let last_paid_date = "";
-
-          const [customerData] = await conn.execute(
-            "SELECT name FROM customers WHERE admin = ? AND unique_id = ?",
-            [userId, installments[i].customer]
-          );
-
-          name = customerData[0].name;
-
-          const [installmentValids] = await conn.execute(
-            "SELECT * FROM installments_progress WHERE admin = ? AND customer = ? AND installment = ?",
-            [
-              userId,
-              installments[i].customer,
-              installments[i].unique_id,
-            ]
-          );
-
-          installment_valids = installmentValids.length;
-
-          for (let j = 0; j < installmentValids.length; j++) {
-            if (installmentValids[j].status == false) {
-              installments_mount += 1;
-            }
-            const today = new Date();
-
-            const installmentDate = new Date(installmentValids[j].date);
-            if (
-              installmentDate < today &&
-              installmentValids[j].status != true
-            ) {
-              overdueInstallments += 1;
-            }
-          }
-
-          const [lastPaidDate] = await conn.execute(
-            "SELECT * FROM installments_progress WHERE admin = ? AND customer = ? AND installment = ? AND status = 1 ORDER BY date DESC LIMIT 1",
-            [
-              userId,
-              installments[i].customer,
-              installments[i].unique_id,
-            ]
-          );
-
-          if (lastPaidDate.length > 0) {
-            last_paid_date = new Date(
-              lastPaidDate[0].finished_date
-            ).toLocaleDateString("en-CA"); // YYYY-MM-DD
-          }
-          
-
-          installmentsData.push({
-            id: installments[i].unique_id,
-            name: name,
-            prodcut: installments[i]["product"],
-            insert_date: installments[i].inserted_date
-              .toLocaleDateString("en-CA")
-              .split("T")[0],
-            last_paid_date: last_paid_date == "" ? "لا يوجد" : last_paid_date,
-            installment_valids: installment_valids,
-            price: installments[i].selling_price,
-            total:
-              installments[i].installment_value * installments[i]["progress"] +
-              installments[i].down_paid,
-            overdue_installments: overdueInstallments,
-            remained_installments: installments_mount,
-            down_paid: installments[i].down_paid,
-          });
-      }
-      return res.status(201).json(installmentsData);
-    } else {
-      return res.status(404).json({ message: "Not Found" });
+    if (installments.length === 0) {
+      return res.status(404).json({ message: "لا توجد بيانات" });
     }
+
+    for (let i = 0; i < installments.length; i++) {
+      let name = "";
+      let overdueInstallments = 0;
+      let installments_mount = 0;
+      let last_paid_date = "";
+
+      // جلب بيانات العميل
+      const [customerData] = await conn.execute(
+        "SELECT name FROM customers WHERE admin = ? AND unique_id = ?",
+        [userId, installments[i].customer]
+      );
+      name = customerData.length > 0 ? customerData[0].name : "مجهول";
+
+      // جلب جميع بيانات الأقساط لهذا العميل وهذا القسط
+      const [installmentValids] = await conn.execute(
+        "SELECT * FROM installments_progress WHERE admin = ? AND customer = ? AND installment = ?",
+        [userId, installments[i].customer, installments[i].unique_id]
+      );
+
+      let today = new Date().toISOString().split("T")[0]; // تاريخ اليوم
+      let hasOverdue = false;
+
+      for (let j = 0; j < installmentValids.length; j++) {
+        let installmentDate = new Date(installmentValids[j].date)
+          .toISOString()
+          .split("T")[0];
+
+        if (installmentDate < today && installmentValids[j].status == 0) {
+          overdueInstallments += 1;
+          hasOverdue = true;
+        }
+
+        if (installmentValids[j].status == 0) {
+          installments_mount += 1;
+        }
+      }
+
+      // جلب آخر قسط مدفوع
+      const [lastPaidDate] = await conn.execute(
+        "SELECT * FROM installments_progress WHERE admin = ? AND customer = ? AND installment = ? AND status = 1 ORDER BY date DESC LIMIT 1",
+        [userId, installments[i].customer, installments[i].unique_id]
+      );
+
+      if (lastPaidDate.length > 0) {
+        last_paid_date = new Date(lastPaidDate[0].finished_date)
+          .toLocaleDateString("en-CA");
+      }
+
+      // **فلترة حسب `filter`**
+      if (filter === true && !hasOverdue) {
+        continue; // تجاهل العملاء الذين ليس لديهم أقساط متأخرة
+      }
+
+      // **إضافة البيانات إلى القائمة النهائية**
+      installmentsData.push({
+        id: installments[i].unique_id,
+        name: name,
+        product: installments[i]["product"],
+        insert_date: new Date(installments[i].inserted_date)
+          .toLocaleDateString("en-CA"),
+        last_paid_date: last_paid_date || "لا يوجد",
+        installment_valids: installmentValids.length,
+        price: installments[i].selling_price,
+        total:
+          installments[i].installment_value * installments[i]["progress"] +
+          installments[i].down_paid,
+        overdue_installments: overdueInstallments,
+        remained_installments: installments_mount,
+        down_paid: installments[i].down_paid,
+      });
+    }
+
+    return res.status(200).json(installmentsData);
   } catch (err) {
-    console.log(err);
+    console.error(err);
+    return res.status(500).json({ message: "حدث خطأ في السيرفر" });
   }
 });
 
@@ -476,7 +475,7 @@ app.post("/api/edit-customer/:userId", upload.none(), async (req, res) => {
           [name, address, status, userId, customerId]
         );
 
-        return res.status(409).json({
+        return res.status(201).json({
           message: "تم تعديل العميل",
           style: { backgroundColor: "green", color: "white", display: "block" },
           status: "success",
@@ -624,7 +623,7 @@ app.get("/api/dashboard-data/:userId", async (req, res) => {
     let overdueInstallments = 0;
     let totalEarnings = 0;
     let mustNow = 0;
-
+    
     // تنفيذ جميع الاستعلامات في نفس الوقت
     const [customersCountS, specialCustomersCountS, badCustomersCountS, badMust] = await Promise.all([
       conn.execute('SELECT id FROM customers WHERE admin = ?', [userId]),
@@ -632,32 +631,33 @@ app.get("/api/dashboard-data/:userId", async (req, res) => {
       conn.execute('SELECT * FROM customers WHERE admin = ? AND status = ?', [userId, 'سئ']),
       conn.execute('SELECT * FROM installments_progress WHERE admin = ? AND status = 0', [userId]),
     ]);
-
+    
     console.log(badCustomersCountS[0]);
     console.log(userId);
-
+    
     customersCount = customersCountS[0].length;
     specialCustomersCount = specialCustomersCountS[0].length;
     badCustomersCount = badCustomersCountS[0].length;
-
+    
     // حساب الأقساط المتأخرة والمستحقة الآن
     badMust[0].forEach((installment) => {
       let today = new Date().toLocaleDateString("en-CA").split("T")[0];
       let installDate = new Date(installment.date).toLocaleDateString("en-CA").split("T")[0];
-
+      
       if (today > installDate) {
         overdueInstallments += 1;
       } else if (today == installDate) {
         mustNow += 1;
       }
     });
-
+    
     const [cashValue] = await conn.execute(
       'SELECT * FROM installments WHERE admin = ?',
       [userId]
     )
-
+    
     for (let i = 0; i < cashValue.length; i++) {
+      let check = 0;
       const earn1 = (cashValue[i].installment_value * cashValue[i].progress) - (cashValue[i].selling_price - cashValue[i].down_paid);
       const installmentEarns = earn1 / cashValue[i].progress;
 
@@ -668,8 +668,12 @@ app.get("/api/dashboard-data/:userId", async (req, res) => {
 
       for (let e = 0; e < progressChecking.length; e++) {
         totalEarnings += installmentEarns;
+        check += 1;
       }
 
+      if (check == Number(cashValue[i].progress)) {
+        totalEarnings += Number(earn1);
+      }
     }
 
     // تجميع البيانات في مصفوفة
@@ -702,7 +706,7 @@ app.post("/api/search-customers/:userId", upload.none(), async (req, res) => {
 
     const [customers] = await conn.execute(
       "SELECT * FROM customers WHERE admin = ? AND name LIKE ?",
-      [userId, `${searchQuery}%`]
+      [userId, `%${searchQuery}%`]
     );
 
     for (let i = 0; i < customers.length; i++) {
@@ -763,109 +767,115 @@ app.post("/api/search-customers/:userId", upload.none(), async (req, res) => {
 });
 
 // Get Installments By Search
-app.post("/api/search-installments/:userId", upload.none(), async (req, res) => {
-  const {searchQuery} = req.body;
+app.post("/api/search-installments/:userId/:filter?", upload.none(), async (req, res) => {
+  const { searchQuery } = req.body;
   
   try {
     const installmentsData = [];
     const userId = parseInt(req.params.userId);
-    console.log(userId);
+    const filter = req.params.filter === "true"; // تحويل الفلتر لقيمة Boolean
+    console.log(`User ID: ${userId}, Filter: ${filter}`);
 
+    // البحث عن العملاء الذين تطابق أسماؤهم مع الاستعلام
     const [customers] = await conn.execute(
       'SELECT * FROM customers WHERE admin = ? AND name LIKE ?',
-      [userId, `${searchQuery}%`],
-    )
+      [userId, `%${searchQuery}%`],
+    );
 
     if (customers.length > 0) {
       for (let q = 0; q < customers.length; q++) {
+        // الحصول على جميع الأقساط الخاصة بالعميل
         const [installments] = await conn.execute(
           "SELECT * FROM installments WHERE admin = ? AND customer = ?",
           [userId, customers[q].unique_id],
         );
-    
+
         for (let i = 0; i < installments.length; i++) {
           let name = "";
           let installment_valids = 0;
           let overdueInstallments = 0;
           let installments_mount = 0;
           let last_paid_date = "";
-  
-            const [customerData] = await conn.execute(
-              "SELECT name FROM customers WHERE admin = ? AND unique_id = ?",
-              [userId, installments[i].customer]
-            );
-  
-            name = customerData[0].name;
-  
-            const [installmentValids] = await conn.execute(
-              "SELECT * FROM installments_progress WHERE admin = ? AND customer = ? AND installment = ?",
-              [
-                userId,
-                installments[i].customer,
-                installments[i].unique_id,
-              ]
-            );
-  
-            installment_valids = installmentValids.length;
-  
-            for (let j = 0; j < installmentValids.length; j++) {
-              if (installmentValids[j].status == false) {
-                installments_mount += 1;
-              }
-              const today = new Date();
-  
-              const installmentDate = new Date(installmentValids[j].date);
-              if (
-                installmentDate < today &&
-                installmentValids[j].status != true
-              ) {
-                overdueInstallments += 1;
-              }
+
+          // استرجاع بيانات العميل
+          const [customerData] = await conn.execute(
+            "SELECT name FROM customers WHERE admin = ? AND unique_id = ?",
+            [userId, installments[i].customer]
+          );
+          name = customerData[0].name;
+
+          // استرجاع بيانات الأقساط
+          const [installmentValids] = await conn.execute(
+            "SELECT * FROM installments_progress WHERE admin = ? AND customer = ? AND installment = ?",
+            [
+              userId,
+              installments[i].customer,
+              installments[i].unique_id,
+            ]
+          );
+          installment_valids = installmentValids.length;
+
+          // حساب الأقساط المتأخرة وغير المدفوعة
+          for (let j = 0; j < installmentValids.length; j++) {
+            if (installmentValids[j].status == false) {
+              installments_mount += 1;
             }
-  
-            const [lastPaidDate] = await conn.execute(
-              "SELECT * FROM installments_progress WHERE admin = ? AND customer = ? AND installment = ? AND status = 1 ORDER BY date DESC LIMIT 1",
-              [
-                userId,
-                installments[i].customer,
-                installments[i].unique_id,
-              ]
-            );
-  
-            if (lastPaidDate.length > 0) {
-              last_paid_date = new Date(
-                lastPaidDate[0].finished_date
-              ).toLocaleDateString("en-CA"); // YYYY-MM-DD
+
+            const today = new Date();
+            const installmentDate = new Date(installmentValids[j].date);
+            if (installmentDate < today && installmentValids[j].status != true) {
+              overdueInstallments += 1;
             }
-            
-  
-          installmentsData.push({
-            id: installments[i].unique_id,
-            name: name,
-            prodcut: installments[i]["product"],
-            insert_date: installments[i].inserted_date
-              .toLocaleDateString("en-CA")
-              .split("T")[0],
-            last_paid_date: last_paid_date == "" ? "لا يوجد" : last_paid_date,
-            installment_valids: installment_valids,
-            price: installments[i].selling_price,
-            total:
-              installments[i].installment_value * installments[i]["progress"] +
-              installments[i].down_paid,
-            overdue_installments: overdueInstallments,
-            remained_installments: installments_mount,
-          });
+          }
+
+          // استرجاع آخر تاريخ دفع للقسط
+          const [lastPaidDate] = await conn.execute(
+            "SELECT * FROM installments_progress WHERE admin = ? AND customer = ? AND installment = ? AND status = 1 ORDER BY date DESC LIMIT 1",
+            [
+              userId,
+              installments[i].customer,
+              installments[i].unique_id,
+            ]
+          );
+
+          if (lastPaidDate.length > 0) {
+            last_paid_date = new Date(
+              lastPaidDate[0].finished_date
+            ).toLocaleDateString("en-CA"); // YYYY-MM-DD
+          }
+
+          // ✅ التحقق من الفلتر قبل الإضافة للنتائج
+          if (!filter || (filter && overdueInstallments > 0)) {
+            installmentsData.push({
+              id: installments[i].unique_id,
+              name: name,
+              product: installments[i]["product"], // ✅ تعديل خطأ الإملاء
+              insert_date: installments[i].inserted_date
+                .toLocaleDateString("en-CA")
+                .split("T")[0],
+              last_paid_date: last_paid_date === "" ? "لا يوجد" : last_paid_date,
+              installment_valids: installment_valids,
+              price: installments[i].selling_price,
+              total:
+                installments[i].installment_value * installments[i]["progress"] +
+                installments[i].down_paid,
+              overdue_installments: overdueInstallments,
+              remained_installments: installments_mount,
+            });
+          }
         }
       }
-    } 
+    }
 
     console.log(installmentsData);
     return res.status(201).json(installmentsData);
 
   } catch (err) {
     console.log(err);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
-})
+});
+
 
 // 🚀 تشغيل السيرفر
 app.listen(PORT, () => {

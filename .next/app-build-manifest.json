@@ -17,28 +17,22 @@
       "static/css/app/login/page.css",
       "static/chunks/app/login/page.js"
     ],
-    "/installments/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/installments/page.css",
-      "static/chunks/app/installments/page.js"
-    ],
-    "/auth/installment-details/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/auth/installment-details/page.css",
-      "static/chunks/app/auth/installment-details/page.js"
-    ],
-    "/auth/pay-installment/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/auth/pay-installment/page.js"
-    ],
     "/customers/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/css/app/customers/page.css",
       "static/chunks/app/customers/page.js"
+    ],
+    "/logout/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/logout/page.js"
+    ],
+    "/installments/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/installments/page.css",
+      "static/chunks/app/installments/page.js"
     ]
   }
 }
