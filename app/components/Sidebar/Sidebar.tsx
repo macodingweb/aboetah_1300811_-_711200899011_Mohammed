@@ -59,7 +59,7 @@ function Sidebar() {
           <span className="title text-[14px] font-semibold text-slate-800">
             ادارة الأقساط
           </span>
-          <span className="w-[40px] h-[40px] flex items-center justify-center bg-blue-600 rounded-[6px] text-[20px] text-white font-bold">
+          <span className="w-[40px] h-[40px] flex items-center justify-center bg-slate-600 rounded-[6px] text-[20px] text-white font-bold">
             SI
           </span>
         </div>

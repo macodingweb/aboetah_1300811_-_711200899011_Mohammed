@@ -60,7 +60,7 @@ function Register() {
 
   return (
     <>
-      <div className="min-h-[100vh] flex justify-center items-center bg-blue-600">
+      <div className="min-h-[100vh] flex justify-center items-center bg-slate-600">
         {/* عرض الـ alert إذا كانت showAlert = true */}
         {showAlert && (
           <div className={`alert py-4 px-6 rounded-[6px] absolute left-2/4 -translate-x-2/4 top-[20px]`} style={alertStyle}>

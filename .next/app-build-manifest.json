@@ -17,11 +17,30 @@
       "static/css/app/login/page.css",
       "static/chunks/app/login/page.js"
     ],
+<<<<<<< HEAD
     "/register/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/css/app/register/page.css",
       "static/chunks/app/register/page.js"
+=======
+    "/customers/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/customers/page.css",
+      "static/chunks/app/customers/page.js"
+    ],
+    "/logout/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/logout/page.js"
+    ],
+    "/installments/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/installments/page.css",
+      "static/chunks/app/installments/page.js"
+>>>>>>> version1.0.1
     ]
   }
 }
