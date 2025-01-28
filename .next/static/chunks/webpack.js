@@ -191,9 +191,13 @@
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
 <<<<<<< HEAD
+<<<<<<< HEAD
 /******/ 		__webpack_require__.h = () => ("83255c4c0936942a")
 =======
 /******/ 		__webpack_require__.h = () => ("7906fddfb04e866d")
+>>>>>>> version1.0.1
+=======
+/******/ 		__webpack_require__.h = () => ("fa72aa0293e388bb")
 >>>>>>> version1.0.1
 /******/ 	})();
 /******/ 	

@@ -269,7 +269,7 @@ app.get("/api/customers-data/:userId", async (req, res) => {
     console.log(userId);
 
     const [customers] = await conn.execute(
-      "SELECT * FROM customers WHERE admin = ?",
+      "SELECT * FROM customers WHERE admin = ? ORDER BY name COLLATE utf8mb4_unicode_ci",
       [userId]
     );
 
@@ -528,7 +528,7 @@ app.get("/api/installments-details/:userId/:installmentId", async (req, res) => 
     try {
       const progressDate = [];
       const [install] = await conn.execute(
-        "SELECT installment_value FROM installments WHERE unique_id = ? AND admin = ?",
+        "SELECT installment_value, customer FROM installments WHERE unique_id = ? AND admin = ?",
         [installmentId, userId]
       );
 
@@ -538,6 +538,12 @@ app.get("/api/installments-details/:userId/:installmentId", async (req, res) => 
       );
 
       if (result.length > 0) {
+        let restMoney = 0;
+        const [customer] = await conn.execute(
+          'SELECT name FROM customers WHERE unique_id = ?',
+          [install[0].customer]
+        )
+
         for (let i = 0; i < result.length; i++) {
           let payBtn = "";
           const timePaid = new Date(result[i].date);
@@ -559,6 +565,10 @@ app.get("/api/installments-details/:userId/:installmentId", async (req, res) => 
             payBtn = "overdue";
           }
 
+          if (result[i].status == false) {
+            restMoney += install[0].installment_value
+          }
+
           progressDate.push({
             installment: installmentId,
             installmentValue: install[0].installment_value,
@@ -574,6 +584,8 @@ app.get("/api/installments-details/:userId/:installmentId", async (req, res) => 
                     .split("T")[0],
             payNow: payBtn,
             progressId: result[i].id,
+            customerName: customer[0].name,
+            restMoney: restMoney,
           });
         }
 

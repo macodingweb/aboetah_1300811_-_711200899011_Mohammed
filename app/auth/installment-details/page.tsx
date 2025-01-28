@@ -18,6 +18,8 @@ function Installments() {
     installmentPaidDate: '',
     payNow: 'none',
     progressId: 0,
+    customerName: '',
+    restMoney: 0,
   }]);
 
   useEffect(() => {
@@ -80,6 +82,7 @@ function Installments() {
       <div className="App p-[30px] w-full h-[100vh] bg-slate-600 flex justify-between">
         <Sidebar />
         <div className="content relative w-[100%] mr-[30px]">
+          <div></div>
         <form onSubmit={handlePaying} className={`login-form ${updateForm ? 'block' : 'hidden'} fixed top-2/4 left-2/4 -translate-x-2/4 -translate-y-2/4 border-solid border-2 border-slate-700 main-shadow w-[400px] p-5 bg-white rounded-xl z-30`}>
           <h3 className="font-semibold mb-10">هل تريد تأكيد سداد القسط ؟</h3>
           <div className="form-submit flex justify-between items-center">
@@ -91,11 +94,12 @@ function Installments() {
             <table className="main-table rounded-[10px] border-collapse border-spacing-0 text-center bg-white w-full">
               <thead>
                 <tr>
-                  <td>القسط</td>
+                  <td>الاسم</td>
                   <td>سعر القسط</td>
                   <td>تاريخ الاستحقاق</td>
                   <td>الحاله</td>
                   <td>تاريخ السداد</td>
+                  <td>المتبقي</td>
                   <td>تسديد</td>
                 </tr>
               </thead>
@@ -103,11 +107,12 @@ function Installments() {
                 {Array.isArray(installments) && installments.length > 0 ? (
                   installments.map((item, index) => (
                     <tr key={index}>
-                      <th>{item ? item.installment: ''}</th>
+                      <th>{item ? item.customerName: ''}</th>
                       <th>{item ? item.installmentValue: ''}</th>
                       <th>{item ? item.installmentWhen: ''}</th>
                       <th>{item ? item.installmentStatus: ''}</th>
                       <th>{item ? item.installmentPaidDate: ''}</th>
+                      <th>{item ? item.restMoney: ''}</th>
                       <th>
                         {/* {item.payNow == "paid" ? (
                           "تم السداد"
