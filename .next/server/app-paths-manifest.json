@@ -1,6 +1,9 @@
 {
-  "/installments/page": "app/installments/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
   "/page": "app/page.js",
   "/login/page": "app/login/page.js",
-  "/customers/page": "app/customers/page.js"
+  "/customers/page": "app/customers/page.js",
+  "/auth/installment-details/page": "app/auth/installment-details/page.js",
+  "/auth/new-installment/page": "app/auth/new-installment/page.js",
+  "/installments/page": "app/installments/page.js"
 }
